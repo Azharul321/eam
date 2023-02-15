@@ -41,7 +41,7 @@ class EmployeeAttendanceController extends Controller
             $inTi->late =  $lTime;
             $inTi->inTime = Carbon::now()->format('H:i:s');
             if ($inTi->save()) {
-                notify()->success("Have A goo day!!", "Success", "bottomRight");
+                notify()->success("Have A good day!!", "Success", "bottomRight");
                 return back();
             }
             notify("Quick notification2");
