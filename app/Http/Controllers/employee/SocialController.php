@@ -28,10 +28,10 @@ class SocialController extends Controller
              // dd($user);
              $finduser = Employee::where('google_id', $user->id)->first();
 
-             $sessPhoto = EmployeeDetails::where('employeeId',$finduser->id)->pluck('profilePhoto')->first();
+            
       
              if($finduser){
-      
+                $sessPhoto = EmployeeDetails::where('employeeId',$finduser->id)->pluck('profilePhoto')->first();
                 Session::put('email',$user->email);
                 Session::put('pp', $sessPhoto);
                 Session::put('fullName', $finduser->fullName);

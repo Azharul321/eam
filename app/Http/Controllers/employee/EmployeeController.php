@@ -4,7 +4,9 @@ namespace App\Http\Controllers\employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\EmployeeAttendance;
 use App\Models\EmployeeDetails;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -263,16 +265,48 @@ class EmployeeController extends Controller
                     File::delete($imagePath3);
                 }
             }
-
             notify()->success("Data sucessfully updated", "Success", "bottomRight");
             return redirect()->route('employeeDetails', $profile->id);
         }
         notify()->error("Something went wrong, Please check properly", "Error", "bottomRight");
         return back()->with('fail', '');
+            
     }
 
     // Delete Employee details in Admin page
     public function employeeDelete($id)
     {
+        $profile = Employee::find($id);
+
+        $empAttendance = EmployeeAttendance::where('employeeId', $id)->get();
+        $empMsg = Message::where('employeeId', $id)->get();
+
+        $details = EmployeeDetails::where('employeeId', $id)->first();
+        $ImageName_02 = $details->profilePhoto;
+        $covarName = $details->covar;
+
+      
+        // return $image;
+        if ($profile->delete()) {
+
+            $empAttendance->each->delete();
+            $empMsg->each->delete();
+            $imagePath2 = public_path('img/profile/' . $profile->email . '/' . $ImageName_02);
+            if (File::exists($imagePath2)) {
+                File::delete($imagePath2);
+            }
+
+            //Hero image delete
+
+            $imagePath3 = public_path('img/profile/' . $profile->email . '/' . $covarName);
+            if (File::exists($imagePath3)) {
+                File::delete($imagePath3);
+            }
+          
+            notify()->success("Employee sucessfully deleted", "Success", "bottomRight");
+            return redirect()->route('EmployeeList');
+        }
+        notify()->error("Something went wrong, Please check properly", "Error", "bottomRight");
+        return back();
     }
 }
