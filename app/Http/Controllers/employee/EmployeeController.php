@@ -288,7 +288,7 @@ class EmployeeController extends Controller
       
         // return $image;
         if ($profile->delete()) {
-
+            $details->delete();
             $empAttendance->each->delete();
             $empMsg->each->delete();
             $imagePath2 = public_path('img/profile/' . $profile->email . '/' . $ImageName_02);
